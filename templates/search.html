@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//blueimp.github.io/Gallery/css/blueimp-gallery.min.css">
+    <link rel="stylesheet" href="/static/vendor/css/bootstrap-image-gallery.css">
+    <link rel="stylesheet" href="/static/vendor/css/search.css">
+    <link rel="stylesheet" href="/static/vendor/css/image-picker.css">
+  </head>
+  <body>
+    <script src="http://fb.me/react-0.11.2.js"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="//blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+    <script src="/static/vendor/js/bootstrap-image-gallery.js"></script>
+    <script src="/static/vendor/js/image-picker.js"></script>
+    <a class="btn btn-primary btn-lg" href="/page">
+      <i class="glyphicon glyphicon-home"></i>
+      Home
+    </a>
+    <div class="pull-right">
+      <button type="button" class="btn btn-warning search btn-lg " id="search">
+        <i class="glyphicon glyphicon-search"></i>
+        Search
+      </button>
+      <div class="checkbox" id="checkbox">
+        <label>
+          <input type="checkbox" id="autotag"> Enable Tag Helper
+        </label>
+      </div>
+    </div>
+    <div style="height:50px; width:100%; clear:both;"></div>
+    <div class="row">
+      <div class="col-md-4" id="persons">
+        <img style='border:5px solid orange' src="/static/img/lfw-small/{{ name }}" height="150" title="{{ name }}">
+      </div>
+      <div class="panel panel-warning col-md-4">
+        <div class="panel-heading">
+          <h4>
+            <i class="glyphicon glyphicon-info-sign"></i>
+            <strong>Recall Performance</strong>
+          </h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-md-3">
+              <div style="font-size: 16px; text-align: center;">Retreive</div>
+              <div id="retreive"  style="font-size: 22px; text-align: center;"></div>
+            </div>
+            <div class="col-md-1">
+              <div style="font-size: 16px; text-align: center;">&nbsp</div>
+              <div style="font-size: 22px; color: black; text-align: center;">/</div>               
+            </div>
+            <div class="col-md-3">
+              <div style="font-size: 16px; text-align: center;">Total</div>
+              <div id="total"  style="font-size: 22px; text-align: center;"></div>
+            </div>
+            <div class="col-md-1">
+              <div style="font-size: 16px; text-align: center;">&nbsp</div>
+              <div style="font-size: 22px; text-align: center;">=</div>      
+            </div>
+            <div class="col-md-3">
+              <div style="font-size: 16px; text-align: center;">Recall</div>
+              <div id="recall"  style="font-size: 22px; text-align: center;"></div>
+            </div>
+          </div>
+        </div>
+      </div>      
+    </div>
+
+<!-- Java Script -->
+    <script type="text/javascript">
+        function showGetResult( url ) {
+            var result = null;
+            var scriptUrl = url;
+            $.ajax({
+                url: scriptUrl,
+                type: 'get',
+                dataType: 'html',
+                async: false,
+                success: function(data) {
+                    result = data;
+                } 
+            });
+            return result;
+        }
+        var total = showGetResult("/true_num/{{ name }}")
+        $('#total').text(total)
+
+        // Handle checkbox
+        if ('{{ autotag }}' == 'True') {
+            $('#autotag').prop('checked', true);
+        }
+        $('#checkbox').click(function() {
+            if($(this).prop("checked")) {
+                $(this).prop('checked', false);
+            } else {
+                $(this).prop('checked', true);
+            }
+        });
+    </script>
+<!-- Java Script END -->
+
+    <div id="content"></div>
+    <script type="text/javascript">
+        $('#content').load("/true_num/{{ name }}");
+    </script>
+
+    <div style="height:50px; width:100%; clear:both;"></div>
+    <div class="panel panel-default" id="panel1">
+      <div class="panel-heading">
+        <h4 class="panel-title clearfix">
+          <a data-toggle="collapse" data-target="#collapseOne" 
+             href="#collapseOne">
+            Taged Group Face
+          </a>
+          <button type="button" class="btn btn-danger custom pull-right" id="clear">
+            <i class="glyphicon glyphicon-remove"></i>
+            Clear
+          </button>
+          <button type="button" class="btn btn-success custom pull-right" id="s_all" >
+            <i class="glyphicon glyphicon-ok"></i>
+            All
+          </button>
+        </h4>
+      </div>
+      <div id="collapseOne" class="panel-collapse collapse in">
+        <select id="selectBoxL" multiple="multiple" class="image-picker show-html">    
+        </select>
+      </div>
+    </div>
+
+    <div style="height:50px; width:100%; clear:both;"></div>
+    <div id="links">
+      <select id="selectBox" multiple="multiple" class="image-picker show-html">    
+      </select>
+      <br/>
+    </div>    
+
+<!-- Java Script -->
+    <script type="text/javascript">
+        var file_list = '{{ test }}'
+        file_array = file_list.split('+');
+        file_array.forEach(function(item) {
+            $('#selectBoxL').append(
+            $('<option>')
+                .attr('data-img-src', "/static/img/lfw-small/" + item)
+                .attr('value', item)
+                .attr('selected', "selected")
+                .text(item)
+            );
+        });
+    </script>
+         
+    <script type="text/javascript">
+        $(function () {
+            'use strict';
+            // Load demo images from flickr:
+            $.ajax({
+                url: '{{ url }}',
+                dataType:"json"
+            }).done(function (result) {
+                // console.log ( result.photos );
+                var linksContainer = $('#selectBox'),
+                  baseUrl, condition, retreive = 0, search_num, autotag_list = [], auto_threshold = "0.000";
+
+                if ($("#autotag").prop("checked")) {
+                    auto_threshold = "0.2001"
+                }
+
+                // Add the demo images as links with thumbnails to the page:
+                $.each(result.photos, function (index, photo) {
+                    baseUrl = photo.url;
+                    condition = photo.answer;
+                    search_num = photo.retreive;
+                    console.log ( condition );
+                    if (photo.score >= auto_threshold) {
+                        if (condition == 'True') {
+                            retreive += 1;
+                            linksContainer.append(
+                            $('<option>')
+                                .attr('data-img-src', baseUrl)
+                                .attr('value', photo.name)
+                                .attr('score', photo.score)
+                                .attr('class', "g_truth")
+                                .text(photo.score + '&nbsp&nbsp&nbsp' +
+                                '(' + photo.t_num + ')')
+                            );
+                        } else if (condition == 'False') {
+                            linksContainer.append(
+                            $('<option>')
+                                .attr('data-img-src', baseUrl)
+                                .attr('value', photo.name)
+                                .attr('score', photo.score)
+                                .text(photo.score + '&nbsp&nbsp&nbsp' +
+                                '(' + photo.t_num + ')')
+                            );
+                        } else {
+                            // means nothing to show
+                        }
+                    } else {
+                        if (condition == 'True') {
+                            retreive += 1;
+                        }
+                        autotag_list.push(photo.name)
+                    }
+                });
+                retreive += search_num;
+                $('#retreive').text(retreive)
+                var total = $('#total').text()
+                var recall = (retreive/total*100).toFixed(2)
+                $('#recall').text(recall + '%')
+
+                // auto tag
+                autotag_list.forEach(function(item) {
+                    $('#selectBoxL').append(
+                    $('<option>')
+                        .attr('data-img-src', "/static/img/lfw-small/" + item)
+                        .attr('value', item)
+                        .attr('selected', "selected")
+                        .text(item)
+                    );
+                });
+
+                // refresh select
+                $("select").imagepicker({
+                    hide_select : true,
+                    show_label  : true
+                })              
+            });
+        });
+    </script>
+
+    <script type="text/javascript">    
+        // All Button Define
+        $('#s_all').click(function(){
+            var options = $('select#selectBoxL option');
+            console.log(options.length)
+            var len = options.length;
+            for (var i = 0; i < len; i++) {
+                console.log(options[i])
+                options[i].selected = true;
+            }
+            $("#selectBoxL").imagepicker({
+                hide_select : true,
+                show_label  : true
+            })
+        });
+
+        // Clear Button Define
+        $('#clear').click(function(){
+            var options = $('select#selectBoxL option');
+            console.log(options.length)
+            var len = options.length;
+            for (var i = 0; i < len; i++) {
+                console.log(options[i])
+                options[i].selected = false;
+            }
+            $("#selectBoxL").imagepicker({
+                hide_select : true,
+                show_label  : true
+            })
+        });
+
+        // Search Button Define
+        $('#search').click(function(){
+            var old_list = $("#selectBoxL").data("picker").selected_values();
+            var select_list = $("#selectBox").data("picker").selected_values();
+            if (old_list.length == 0 && select_list.length == 0) {
+                alert("Please at least chose one picture.")
+            } else {
+                var old_s = old_list.join("+");
+                var new_s = select_list.join("+"); 
+                console.log(old_s + "+" + new_s);
+                var autotag_flag = $("#autotag").prop("checked")?"True":"False"
+                console.log (autotag_flag)
+                window.location.href = "/s_page/" + old_s + "+" + new_s + "/" + autotag_flag;
+            }
+        });
+    </script>
+<!-- Java Script END -->
+  </body>
+</html>
+
+
