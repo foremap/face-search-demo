@@ -1,4 +1,4 @@
 Flask==0.10.1
 Jinja2==2.7.3
 anyjson==0.3.3
-NearPy
+NearPy==0.2.2
