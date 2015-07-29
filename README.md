@@ -2,6 +2,9 @@
 Like iphoto, use lsh + active to serach face photo and help to tag person
 
 Please install requirements first
- -> pip install -r requirements.txt
+ 1. sudo apt-get install python-scipy
+ 2. sudo pip install -r requirements.txt
 
-Run localhost:5000
+Run '''sudo python app.py''' 
+
+Open localhost:5000
